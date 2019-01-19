@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mobell">
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+     <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="15" />
 
     <application
         android:allowBackup="true"
@@ -21,7 +26,7 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                android:name="com.google.android.geo.API_KEY"
-               android:value="YOUR_API_KEY"/>
+               android:value="NULL"/>
         </activity>
     </application>
 
