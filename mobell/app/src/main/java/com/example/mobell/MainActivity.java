@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
          "fields=formatted_address,name&" +
          "locationbias=circle:20@" + coordinate + "&" +
          "key=" + YOUR_API_KEY;
+         new Thread(new Runnable(){
+    @Override
+    public void run() {
       try {
          URL url = new URL(req);
          HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
          String inputLine;
          StringBuffer content = new StringBuffer();
          while ((inputLine = in.readLine()) != null) {
-             content.append(inputLine);
+            content.append(inputLine);
          }
          in.close();
          con.disconnect();
@@ -57,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
       catch (Exception e) {
          return "Exception: " + e;
       }
+       }
+}).start();
    }
 
    // END
