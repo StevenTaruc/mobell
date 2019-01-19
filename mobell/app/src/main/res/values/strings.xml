@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name" translatable="false"><b><i>Mobell</i></b></string>
     <string name="thanks" translatable="false">Thank you for using <b><i>Mobell</i></b></string>
+    <string name="action_settings">Settings</string>
 </resources>
