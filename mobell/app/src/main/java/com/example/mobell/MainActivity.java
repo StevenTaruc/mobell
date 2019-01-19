@@ -16,46 +16,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Construct a GeoDataClient.
+        mGeoDataClient = Places.getGeoDataClient(this, null);
+
+        // Construct a PlaceDetectionClient.
+        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
     }
 
     // START
-
-   public String getStore(String coordinate) {
-      String req =
-         "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?" +
-         "input=store&" +
-         "inputtype=textquery&" +
-         "fields=formatted_address,name&" +
-         "locationbias=circle:20@" + coordinate + "&" +
-         "key=" + YOUR_API_KEY;
-         URL url = new URL(req);
-         HttpURLConnection con = (HttpURLConnection)url.openConnection();
-         try {
-            con.setRequestMethod("GET");
+    public String getStore() {
+      String retString = "";
+      Task<PlaceLikelihoodBufferResponse> placeResult = mPlaceDetectionClient.getCurrentPlace(null);
+      placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
+         @Override
+         public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
+            PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
+            for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+               retString = retString + String.format("Place '%s' has likelihood: %g",
+               placeLikelihood.getPlace().getName(),
+               placeLikelihood.getLikelihood()));
+            }
+            likelyPlaces.release();
          }
-         catch (ProtocolException e) {
-            System.out.println("ProtocolException: " + e);
-         }
-         int status = con.getResponseCode();
-
-         System.out.println("status: " + status);
-
-         BufferedReader in = new BufferedReader(
-           new InputStreamReader(con.getInputStream()));
-         String inputLine;
-         StringBuffer content = new StringBuffer();
-         while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-         }
-         in.close();
-         con.disconnect();
-
-         System.out.println(con.getResponseMessage());
-         return content.toString();
-      }
-      catch (Exception e) {
-         return "Exception: " + e;
-      }
+      });
+      return retString;
    }
 
    // END
