@@ -23,7 +23,8 @@ import com.google.android.gms.tasks.Task;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String EXTRA_MESSAGE = "com.example.mobell.MESSAGE";
+    public static final String LOCATION_MESSAGE = "com.example.mobell.LOCATION";
+    public static final String REQUEST_MESSAGE = "com.example.mobell.REQUEST";
     protected GeoDataClient mGeoDataClient;
     protected PlaceDetectionClient mPlaceDetectionClient;
     // TODO: Change this!!!!!
@@ -78,38 +79,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // START
-    // public String getStore() {
-    public void getStore() {
+    public String getStore() {
         final String TAG = "getStore";
         try {
             getLocationPermission();
             if (mLocationPermissionGranted) {
                 Task<PlaceLikelihoodBufferResponse> placeResult = mPlaceDetectionClient.getCurrentPlace(null);
-                Log.d(TAG, "0x5E710C set location success");
+                Log.d(TAG, "0x5E710CA7 set location success");
                 placeResult.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
                     @Override
                     public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
                         PlaceLikelihoodBufferResponse likelyPlaces = null;
                         if(task.isSuccessful() && task.getResult() != null) {
-                            Log.d(TAG, "0x4A11001 task result success, task.isSuccessful is: " + task.isSuccessful() + " result is null: " + (task.getResult() == null));
+                            Log.d(TAG, "0x4A110001 task result success, task.isSuccessful is: " + task.isSuccessful() + "; result is null: " + (task.getResult() == null));
                             likelyPlaces = task.getResult();
-                            Log.d(TAG, "0x4A11002 task result success, task.isSuccessful is: " + task.isSuccessful() + " result is null: " + (task.getResult() == null));
+                            Log.d(TAG, "0x4A110002 task result success, task.isSuccessful is: " + task.isSuccessful() + "; result is null: " + (task.getResult() == null));
                         }
-                        Log.d(TAG, "0x7A54 task result success, task.isSuccessful is: " + task.isSuccessful() + " result is null: " + (task.getResult() == null));
+                        Log.d(TAG, "0x7A547A54 task result success, task.isSuccessful is: " + task.isSuccessful() + "; result is null: " + (task.getResult() == null));
                         retString = likelyPlaces.get(0).getPlace().getName().toString();
-                            /*
+                        /*
                         for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                             retString = String.format("'%s', Place '%s' has likelihood: %g",
                                     retString,
                                     placeLikelihood.getPlace().getName(),
                                     placeLikelihood.getLikelihood());
                         }
-                                    */
+                        */
                         likelyPlaces.release();
-                        Log.d(TAG, "0x707 likelyPlaces released!");
+                        Log.d(TAG, "0x07070707 likelyPlaces released!");
                     }
                 });
+                Log.d(TAG , "0x73555111; (middle) retString = " + retString);
                 // return retString;
+            }
+            else {
+                return "LOCATION PERMISSION NEEDED FOR APP TO FUNCTION!";
             }
         }
         catch(SecurityException e) {
@@ -119,11 +123,16 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "0x8BADF00D UNHANDLED EXCEPTION IN getStore " + e);
         }
 
-        Log.d("getStore" , "0xDEADBEEF [permission granted is: " + mLocationPermissionGranted + "] (" + retString + ")");
-        // return retString;
+        Log.d(TAG , "0xDEADBEEF [permission granted is: " + mLocationPermissionGranted + "] (" + retString + ")");
+        Log.d(TAG , "0x73555111; (end) retString = " + retString);
+        if (retString.length() <= 0) {
+            return "Unable to acquire location, please try again later (you have already enabled the \"Location\" permission)";
+        }
+        return retString;
    }
 
    // END
+    /*
    private class AsyncTaskRunner extends AsyncTask<Void, Void, Void> {
 
        @Override
@@ -132,18 +141,19 @@ public class MainActivity extends AppCompatActivity {
            return null;
        }
    }
+   */
 
     /** Called when the user taps the Send button */
     public void sendMessage(View view) {
         String coordinate = "35.280895799999996,-120.66354899999999";
-        // String resp = getStore();
-        new AsyncTaskRunner().execute();
+        String resp = getStore();
+        // new AsyncTaskRunner().execute();
         Intent intent = new Intent(this, DisplayMessageActivity.class);
         EditText editText = (EditText) findViewById(R.id.editText);
-        String message = editText.getText().toString();
+        String requestDetails = editText.getText().toString();
 
-        // intent.putExtra(EXTRA_MESSAGE, resp);
-        intent.putExtra(EXTRA_MESSAGE, message);
+        intent.putExtra(LOCATION_MESSAGE, resp);
+        intent.putExtra(REQUEST_MESSAGE, requestDetails);
         startActivity(intent);
     }
 }

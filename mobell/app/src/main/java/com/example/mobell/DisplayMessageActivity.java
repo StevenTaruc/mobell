@@ -13,9 +13,11 @@ public class DisplayMessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_message);
 
         Intent intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-
-        TextView textView = findViewById(R.id.textView);
-        textView.setText(message);
+        String msg = intent.getStringExtra(MainActivity.LOCATION_MESSAGE);
+        TextView textView = findViewById(R.id.locationInfo);
+        textView.setText(msg);
+        msg = intent.getStringExtra(MainActivity.REQUEST_MESSAGE);
+        textView = findViewById(R.id.requestDetails);
+        textView.setText(msg);
     }
 }
