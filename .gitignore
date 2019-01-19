@@ -1,4 +1,4 @@
 *google-services.json
 *.idea*
 *.idea/*
-AndroidManifest.xml
+*AndroidManifest.xml
