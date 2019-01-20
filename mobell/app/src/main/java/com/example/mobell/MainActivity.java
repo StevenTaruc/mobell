@@ -145,15 +145,22 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user taps the Send button */
     public void sendMessage(View view) {
+        /*
         String coordinate = "35.280895799999996,-120.66354899999999";
         String resp = getStore();
-        // new AsyncTaskRunner().execute();
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
+        */
+        // Intent intent = new Intent(this, DisplayMessageActivity.class);
+
+        Intent intent = new Intent(this, AssistanceInboundActivity.class);
+        /**
+         * Do not actually do anything; there is nothing handling it on the backend
+
         EditText editText = (EditText) findViewById(R.id.editText);
         String requestDetails = editText.getText().toString();
 
         intent.putExtra(LOCATION_MESSAGE, resp);
         intent.putExtra(REQUEST_MESSAGE, requestDetails);
+        */
         startActivity(intent);
     }
 }
