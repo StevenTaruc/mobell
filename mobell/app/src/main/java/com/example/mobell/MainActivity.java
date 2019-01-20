@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
    }
    */
 
-
 //    /** Called when the user taps the Send button */
 //    public void sendMessage(View view) {
 //        String coordinate = "35.280895799999996,-120.66354899999999";
@@ -239,6 +238,5 @@ public class MainActivity extends AppCompatActivity {
                 return null;
             }
         }.execute();
-
     }
 }
