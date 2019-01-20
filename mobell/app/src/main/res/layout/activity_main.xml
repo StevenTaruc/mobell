@@ -31,18 +31,22 @@
         android:id="@+id/button"
         android:layout_width="344dp"
         android:layout_height="69dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="644dp"
         android:layout_marginEnd="32dp"
-        android:onClick="sendMessage"
+        android:onClick="sendNotification"
         android:text="Inform Store Employees"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
+        android:id="@+id/radioSex"
         android:layout_width="320dp"
         android:layout_height="267dp"
         android:layout_marginStart="45dp"
         android:layout_marginTop="315dp"
+        android:checkedButton="@+id/radioButton5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 

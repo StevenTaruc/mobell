@@ -1,7 +1,9 @@
 package com.example.mobell;
 
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -13,13 +15,44 @@ import android.view.View;
 import android.widget.EditText;
 import java.net.*;
 import java.io.*;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import java.net.*;
+import java.io.*;
+import com.google.android.gms.common.internal.Constants;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+//import com.squareup.okhttp.MediaType;
+//import com.squareup.okhttp.OkHttpClient;
+//import com.squareup.okhttp.Request;
+//import com.squareup.okhttp.RequestBody;
+//import com.squareup.okhttp.Response;
+
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     public static String retString = "";
     protected boolean mLocationPermissionGranted;
     protected final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private RadioGroup radioSexGroup;
+    private RadioButton radioSexButton;
 
     private void getLocationPermission() {
         /*
@@ -143,17 +178,67 @@ public class MainActivity extends AppCompatActivity {
    }
    */
 
-    /** Called when the user taps the Send button */
-    public void sendMessage(View view) {
-        String coordinate = "35.280895799999996,-120.66354899999999";
-        String resp = getStore();
-        // new AsyncTaskRunner().execute();
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText) findViewById(R.id.editText);
-        String requestDetails = editText.getText().toString();
 
-        intent.putExtra(LOCATION_MESSAGE, resp);
-        intent.putExtra(REQUEST_MESSAGE, requestDetails);
-        startActivity(intent);
+//    /** Called when the user taps the Send button */
+//    public void sendMessage(View view) {
+//        String coordinate = "35.280895799999996,-120.66354899999999";
+//        String resp = getStore();
+//        // new AsyncTaskRunner().execute();
+//        Intent intent = new Intent(this, DisplayMessageActivity.class);
+//        EditText editText = (EditText) findViewById(R.id.editText);
+//        String requestDetails = editText.getText().toString();
+//
+//        intent.putExtra(LOCATION_MESSAGE, resp);
+//        intent.putExtra(REQUEST_MESSAGE, requestDetails);
+//        startActivity(intent);
+//    }
+
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+    public void sendNotification(View view) {
+        Intent intent = new Intent(this, DisplayMessageActivity.class);
+//        String requestDetails = editText.getText().toString();
+        Log.d("Test", "test");
+
+
+        radioSexGroup = (RadioGroup) findViewById(R.id.radioSex);
+
+        // get selected radio button from radioGroup
+        int selectedId = radioSexGroup.getCheckedRadioButtonId();
+
+        // find the radiobutton by returned id
+        radioSexButton = (RadioButton) findViewById(selectedId);
+
+        final String buttonStr = radioSexButton.getText().toString();
+
+
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    JSONObject json=new JSONObject();
+                    JSONObject dataJson=new JSONObject();
+                    dataJson.put("body",buttonStr);
+                    dataJson.put("title","Customer[3e423440] Needs Assistance");
+                    json.put("notification",dataJson);
+//                    json.put("to",regToken);
+                    json.put("to","/topics/weather");
+                    RequestBody body = RequestBody.create(JSON, json.toString());
+                    Request request = new Request.Builder()
+                            .header("Authorization","key="+ "KEY")
+                            .url("https://fcm.googleapis.com/fcm/send")
+                            .post(body)
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    String finalResponse = response.body().string();
+                    Log.d("Final URL: ",finalResponse);
+                }catch (Exception e){
+                    //Log.d(TAG,e+"");
+                }
+                return null;
+            }
+        }.execute();
+
     }
 }
